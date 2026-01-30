@@ -1,1 +1,2 @@
 Alan Reyes;1750132084;20;alan.reyes@epn.edu.ec;Alan20
+administrador;1234567891;20;admin@polidelivery.com;Admin123
