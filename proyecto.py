@@ -1,3 +1,5 @@
+from collections import deque
+
 def cargar_centros():
     centros = []
     try:
@@ -144,9 +146,9 @@ def login_user():
             print("Has ingresado con éxito!")
 
             if email == "admin@polidelivery.com":
-                return "admin"
+                return "admin", email
             else:
-                return "cliente"
+                return "cliente", email
 
     archivo.close()
     print("[ERROR] Usuario o contraseña incorrectas")
@@ -327,6 +329,155 @@ def mostrar_arbol_regiones(arbol):
         for centro in arbol[region]:
             print("  └─", centro)
 
+def construir_adyacencia(centros, matriz):
+    adya = {}
+    n = len(centros)
+
+    for i in range(n):
+        adya[i] = []
+        for j in range(n):
+            if matriz is not None and matriz[i][j] is not None and matriz[i][j] != 0:
+                adya[i].append(j)
+    return adya
+
+def bfs_centros_cercanos(centros, matriz, origen):
+    ady = construir_adyacencia(centros, matriz)
+    visitado = [False] * len(centros)
+    cola = deque()
+
+    visitado[origen] = True
+    cola.append(origen)
+
+    recorrido = []
+
+    while cola:
+        actual = cola.popleft()
+        recorrido.append(actual)
+
+        for vecino in ady[actual]:
+            if not visitado[vecino]:
+                visitado[vecino] = True
+                cola.append(vecino)
+
+    return recorrido
+
+def buscar_centros_cercanos(centros, matriz):
+    if matriz is None:
+        print("[ERROR] No existe matriz de costos.")
+        return
+
+    mostrar_centros(centros)
+    try:
+        origen = int(input("Centro origen (#): ")) - 1
+        if origen < 0 or origen >= len(centros):
+            print("[ERROR] Centro inválido.")
+            return
+    except:
+        print("[ERROR] Entrada inválida.")
+        return
+
+    recorrido = bfs_centros_cercanos(centros, matriz, origen)
+
+    print("\nCentros cercanos (BFS):")
+    for i in recorrido:
+        print("-", centros[i])
+
+def dfs_explorar(centros, matriz, origen):
+    ady = construir_adyacencia(centros, matriz)
+    visitado = [False] * len(centros)
+    pila = [origen]
+
+    recorrido = []
+
+    while pila:
+        actual = pila.pop()
+
+        if not visitado[actual]:
+            visitado[actual] = True
+            recorrido.append(actual)
+
+            for vecino in ady[actual]:
+                if not visitado[vecino]:
+                    pila.append(vecino)
+
+    return recorrido
+
+def explorar_rutas_dfs(centros, matriz):
+    if matriz is None:
+        print("[ERROR] No existe matriz de costos.")
+        return
+
+    mostrar_centros(centros)
+
+    try:
+        origen = int(input("Centro origen (#): ")) - 1
+        if origen < 0 or origen >= len(centros):
+            print("[ERROR] Centro inválido.")
+            return
+    except:
+        print("[ERROR] Entrada inválida.")
+        return
+
+    recorrido = dfs_explorar(centros, matriz, origen)
+
+    print("\nExploración completa de rutas (DFS):")
+    for i in recorrido:
+        print("-", centros[i])
+
+def guardar_ruta_cliente(nombre_archivo, centros, ruta, costo):
+    try:
+        archivo = open(nombre_archivo, "a", encoding="utf-8")
+        archivo.write("Ruta: ")
+        for i in range(len(ruta)):
+            if i == len(ruta) - 1:
+                archivo.write(centros[ruta[i]])
+            else:
+                archivo.write(centros[ruta[i]] + " -> ")
+        archivo.write("\nCosto total: " + str(costo))
+        archivo.write("\n-------------------------\n")
+        archivo.close()
+        print("Ruta guardada correctamente.")
+    except:
+        print("[ERROR] No se pudo guardar la ruta.")
+
+def consultar_ruta_cliente(centros, matriz, correo_cliente):
+    if matriz is None:
+        print("[ERROR] No existe matriz de costos.")
+        return
+
+    mostrar_centros(centros)
+
+    try:
+        origen = int(input("Centro origen (#): ")) - 1
+        destino = int(input("Centro destino (#): ")) - 1
+        if origen < 0 or origen >= len(centros) or destino < 0 or destino >= len(centros):
+            print("[ERROR] Índices fuera de rango.")
+            return
+    except:
+        print("[ERROR] Entrada inválida.")
+        return
+
+    distancia, previo = dijkstra(centros, matriz, origen)
+
+    if distancia[destino] == float("inf"):
+        print("[ERROR] No hay ruta disponible.")
+        return
+
+    ruta = obtener_ruta(previo, destino)
+
+    print("\nRuta óptima:")
+    for i in range(len(ruta)):
+        if i == len(ruta) - 1:
+            print(centros[ruta[i]], end="")
+        else:
+            print(centros[ruta[i]], end=" -> ")
+    print("\nCosto total:", distancia[destino])
+
+    guardar = input("¿Desea guardar esta ruta? (s/n): ").lower()
+    if guardar == "s":
+        nombre_archivo = "rutas-" + correo_cliente.split("@")[0] + ".txt"
+        guardar_ruta_cliente(nombre_archivo, centros, ruta, distancia[destino])
+
 def menu_admin():
     print("\n\tMENÚ DE ADMINISTRADOR")
     print("1. Ver centros")
@@ -345,9 +496,11 @@ def menu_admin():
 def menu_cliente():
     print("\n\tMENÚ DE CLIENTE")
     print("1. Ver centros")
-    print("2. Consultar ruta óptima")
+    print("2. Consultar ruta óptima (y guardar)")
     print("3. Ver árbol de regiones")
-    print("4. SALIR")
+    print("4. Buscar centros cercanos (BFS)")
+    print("5. Explorar rutas (DFS)")
+    print("6. SALIR")
     return input(">>> ").strip()
 
 def menu_inicial():
@@ -372,7 +525,7 @@ def main():
         elif opcion == "2":
             registro_usuario()
         elif opcion == "3":
-            rol = login_user()
+            rol, correo = login_user()
 
             if rol == "admin":
                 exit_admin = False
@@ -383,7 +536,6 @@ def main():
                         mostrar_centros(centros)
                     elif op == "2":
                         agregar_centro(centros)
-
                     elif op == "3":
                         actualizar_centro(centros)
                     elif op == "4":
@@ -395,10 +547,8 @@ def main():
                         print("Matriz creada con éxito!")
                     elif op == "7":
                         ingresar_costos(centros, matriz)
-
                     elif op == "8":
                         mostrar_matriz(centros, matriz)
-
                     elif op == "9":
                         arbol_regiones = crear_arbol_regiones()
                         print("Árbol de regiones creado con éxito!")
@@ -417,10 +567,14 @@ def main():
                     if op == "1":
                         mostrar_centros(centros)
                     elif op == "2":
-                        consultar_ruta(centros, matriz)
+                        consultar_ruta_cliente(centros, matriz, correo)
                     elif op == "3":
                         mostrar_arbol_regiones(arbol_regiones)
                     elif op == "4":
+                        buscar_centros_cercanos(centros, matriz)
+                    elif op == "5":
+                        explorar_rutas_dfs(centros, matriz)
+                    elif op == "6":
                         exit_cliente = True
                     else:
                         print("[ERROR] Opción inválida")
