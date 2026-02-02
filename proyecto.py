@@ -104,23 +104,84 @@ def contraseña_segura(contraseña):
 
 def registro_usuario():
     print("\n--- REGISTRO DE USUARIO ---")
-    user = input("NOMBRE Y APELLIDO: ").strip()
-    cedula = input("CÉDULA: ").strip()
-    edad = input("EDAD: ").strip()
-    email = input("CORREO: ").strip()
+ 
+    while True:
 
-    pwd = input("CONTRASEÑA: ").strip()
-    if not contraseña_segura(pwd):
-        print("[ERROR] Contraseña no segura -> Debe incluir mayúsculas, minúsculas y números")
-        return
+        user = input("NOMBRE Y APELLIDO: ").strip()
+
+        if user == "":
+            print("[ERROR] El nombre no puede estar vacío.")
+
+        elif len(user.split()) < 2:
+            print("[ERROR] Debe ingresar nombre y apellido.")
+            
+        else:
+            break
+
+    while True:
+
+        cedula = input("CÉDULA (10 dígitos): ").strip()
+
+        if not cedula.isdigit():
+            print("[ERROR] La cédula debe contener solo números.")
+
+        elif len(cedula) != 10:
+            print("[ERROR] La cédula debe tener exactamente 10 dígitos.")
+        else:
+            break
+
+    while True:
+
+        edad = input("EDAD (16-99): ").strip()
+
+        if not edad.isdigit():
+            print("[ERROR] La edad debe ser un número.")
+
+        else:
+            edad_num = int(edad)
+            if edad_num < 16:
+                print("[ERROR] Debe ser mayor de 16 años para registrarse.")
+
+            elif edad_num >= 100:
+                print("[ERROR] La edad debe ser menor a 100 años.")
+
+            else:
+                break
+
+    correo_valido = False
+
+    while not correo_valido:
+
+        email = input("CORREO: ").strip()
+        if email == "":
+            print("[ERROR] El correo no puede estar vacío.")
+        elif "@" not in email:
+            print("[ERROR] El correo debe contener '@'.")
+        elif email.count("@") > 1:
+            print("[ERROR] El correo debe contener solo un '@'.")
+        elif email.startswith("@") or email.endswith("@"):
+            print("[ERROR] El correo no puede comenzar ni terminar con '@'.")
+        else:
+            correo_valido = True
+            print("Correo válido.")
+
+    while True:
+
+        pwd = input("CONTRASEÑA: ").strip()
+        if not contraseña_segura(pwd):
+            print("[ERROR] Contraseña no segura -> Debe incluir mayúsculas, minúsculas y números")
+
+        else:
+            break
 
     try:
         archivo = open("usuarios.txt", "a", encoding="utf-8")
         archivo.write(f"{user};{cedula};{edad};{email};{pwd}\n")
         archivo.close()
         print("Usuario registrado correctamente.")
+
     except:
-        print("[ERROR] No se pudo guardar el usuario!!!")
+        print("[ERROR] No se pudo guardar el usuario!!")
 
 def login_user():
     print("\n--- LOGIN ---")
