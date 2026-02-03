@@ -44,7 +44,7 @@ def guardar_centros(centros):
 
 def actualizar_centro(centros):
     if len(centros) == 0:
-        print("[ERROR] No hay centros registrados")
+        print("[ERROR] No hay centros registrados!!!")
         return
 
     print("\n--- ACTUALIZAR CENTRO ---")
@@ -56,7 +56,7 @@ def actualizar_centro(centros):
             print("[ERROR] Número inválido!!!")
             return
     except:
-        print("[ERROR] Entrada inválida...")
+        print("[ERROR] Entrada inválida!!!")
         return
 
     nuevo_nombre = input("Ingrese el nuevo nombre: ").strip()
@@ -69,7 +69,7 @@ def actualizar_centro(centros):
 
 def eliminar_centro(centros):
     if len(centros) == 0:
-        print("[ERROR] No hay centros registrados")
+        print("[ERROR] No hay centros registrados!!!")
         return
 
     print("\n--- ELIMINAR CENTRO ---")
@@ -81,11 +81,11 @@ def eliminar_centro(centros):
             print("[ERROR] Número inválido!!!")
             return
     except:
-        print("[ERROR] Entrada inválida...")
+        print("[ERROR] Entrada inválida!!!")
         return
 
     eliminado = centros.pop(pos - 1)
-    print(f"'{eliminado}' eliminado con éxito!")
+    print(f"'{eliminado}' eliminado con éxito")
 
 def contraseña_segura(contraseña):
     mayusculas = False
@@ -110,10 +110,10 @@ def registro_usuario():
         user = input("NOMBRE Y APELLIDO: ").strip()
 
         if user == "":
-            print("[ERROR] El nombre no puede estar vacío.")
+            print("[ERROR] El nombre no puede estar vacío!!!")
 
         elif len(user.split()) < 2:
-            print("[ERROR] Debe ingresar nombre y apellido.")
+            print("[ERROR] Debe ingresar nombre y apellido!!!")
             
         else:
             break
@@ -123,10 +123,10 @@ def registro_usuario():
         cedula = input("CÉDULA (10 dígitos): ").strip()
 
         if not cedula.isdigit():
-            print("[ERROR] La cédula debe contener solo números.")
+            print("[ERROR] La cédula debe contener solo números!!!")
 
         elif len(cedula) != 10:
-            print("[ERROR] La cédula debe tener exactamente 10 dígitos.")
+            print("[ERROR] La cédula debe tener exactamente 10 dígitos!!!")
         else:
             break
 
@@ -135,15 +135,15 @@ def registro_usuario():
         edad = input("EDAD (16-99): ").strip()
 
         if not edad.isdigit():
-            print("[ERROR] La edad debe ser un número.")
+            print("[ERROR] La edad debe ser un número!!!")
 
         else:
             edad_num = int(edad)
             if edad_num < 16:
-                print("[ERROR] Debe ser mayor de 16 años para registrarse.")
+                print("[ERROR] Debe ser mayor de 16 años para registrarse!!!")
 
             elif edad_num >= 100:
-                print("[ERROR] La edad debe ser menor a 100 años.")
+                print("[ERROR] La edad debe ser menor a 100 años!!!")
 
             else:
                 break
@@ -154,16 +154,15 @@ def registro_usuario():
 
         email = input("CORREO: ").strip()
         if email == "":
-            print("[ERROR] El correo no puede estar vacío.")
+            print("[ERROR] El correo no puede estar vacío!!!")
         elif "@" not in email:
-            print("[ERROR] El correo debe contener '@'.")
+            print("[ERROR] El correo debe contener '@'!!!")
         elif email.count("@") > 1:
-            print("[ERROR] El correo debe contener solo un '@'.")
+            print("[ERROR] El correo debe contener solo un '@'!!!")
         elif email.startswith("@") or email.endswith("@"):
-            print("[ERROR] El correo no puede comenzar ni terminar con '@'.")
+            print("[ERROR] El correo no puede comenzar ni terminar con '@'!!!")
         else:
             correo_valido = True
-            print("Correo válido.")
 
     while True:
 
@@ -178,10 +177,10 @@ def registro_usuario():
         archivo = open("usuarios.txt", "a", encoding="utf-8")
         archivo.write(f"{user};{cedula};{edad};{email};{pwd}\n")
         archivo.close()
-        print("Usuario registrado correctamente.")
+        print("Usuario registrado correctamente!")
 
     except:
-        print("[ERROR] No se pudo guardar el usuario!!")
+        print("[ERROR] No se pudo guardar el usuario!!!")
 
 def login_user():
     print("\n--- LOGIN ---")
@@ -212,7 +211,7 @@ def login_user():
                 return "cliente", email
 
     archivo.close()
-    print("[ERROR] Usuario o contraseña incorrectas")
+    print("[ERROR] Usuario o contraseña incorrectas!!!")
     return None
 
 def crear_matriz_costos(centros):
@@ -230,12 +229,12 @@ def crear_matriz_costos(centros):
 
 def ingresar_costos(centros, matriz):
     if matriz is None:
-        print("[ERROR] Primero cree la matriz de costos (opción 6).")
+        print("[ERROR] Primero cree la matriz de costos (opción 6)")
         return
 
     n = len(centros)
     if n < 2:
-        print("[ERROR] Debe haber al menos 2 centros para ingresar costos.")
+        print("[ERROR] Debe haber al menos 2 centros para ingresar costos!!!")
         return
 
     print("\n--- INGRESO DE COSTOS ---")
@@ -244,7 +243,7 @@ def ingresar_costos(centros, matriz):
             try:
                 costo = int(input(f"Costo entre {centros[i]} y {centros[j]}: "))
                 if costo < 0:
-                    print("[ERROR] El costo no puede ser negativo.")
+                    print("[ERROR] El costo no puede ser negativo!!!")
                     return
                 matriz[i][j] = costo
                 matriz[j][i] = costo
@@ -256,7 +255,7 @@ def ingresar_costos(centros, matriz):
 
 def mostrar_matriz(centros, matriz):
     if matriz is None:
-        print("[ERROR] No existe matriz. Cree la matriz primero.")
+        print("[ERROR] No existe matriz. Cree la matriz primero!!!")
         return
 
     print("\n--- MATRIZ DE COSTOS ---")
@@ -316,11 +315,11 @@ def obtener_ruta(previo, destino):
 
 def consultar_ruta(centros, matriz):
     if matriz is None:
-        print("[ERROR] Aún no existe matriz de costos. Pida al ADMIN crearla e ingresar costos.")
+        print("[ERROR] Aún no existe matriz de costos. Pida al ADMIN crearla e ingresar costos")
         return
 
     if len(centros) < 2:
-        print("[ERROR] Debe haber al menos 2 centros.")
+        print("[ERROR] Debe haber al menos 2 centros!!!")
         return
 
     print("\n--- CONSULTAR RUTA ÓPTIMA (DIJKSTRA) ---")
@@ -330,7 +329,7 @@ def consultar_ruta(centros, matriz):
         origen = int(input("Centro origen (#): ")) - 1
         destino = int(input("Centro destino (#): ")) - 1
         if origen < 0 or origen >= len(centros) or destino < 0 or destino >= len(centros):
-            print("[ERROR] Índices fuera de rango.")
+            print("[ERROR] Índices fuera de rango!!!")
             return
     except:
         print("[ERROR] Entrada inválida!!!")
@@ -339,7 +338,7 @@ def consultar_ruta(centros, matriz):
     distancia, previo = dijkstra(centros, matriz, origen)
 
     if distancia[destino] == float("inf"):
-        print("[ERROR] No hay ruta posible (faltan costos o conexión).")
+        print("[ERROR] No hay ruta posible (faltan costos o conexión)")
         return
 
     ruta = obtener_ruta(previo, destino)
@@ -362,7 +361,7 @@ def crear_arbol_regiones():
         if region == "0":
             break
         if region == "":
-            print("[ERROR] Región inválida.")
+            print("[ERROR] Región inválida!!!")
             continue
 
         if region not in arbol:
@@ -373,7 +372,7 @@ def crear_arbol_regiones():
             if centro == "0":
                 break
             if centro == "":
-                print("[ERROR] Centro inválido.")
+                print("[ERROR] Centro inválido!!!")
                 continue
             arbol[region].append(centro)
 
@@ -381,7 +380,7 @@ def crear_arbol_regiones():
 
 def mostrar_arbol_regiones(arbol):
     if arbol is None or len(arbol) == 0:
-        print("[ERROR] No hay árbol de regiones creado.")
+        print("[ERROR] No hay árbol de regiones creado!!!")
         return
 
     print("\n--- ÁRBOL DE REGIONES ---")
@@ -424,17 +423,17 @@ def bfs_centros_cercanos(centros, matriz, origen):
 
 def buscar_centros_cercanos(centros, matriz):
     if matriz is None:
-        print("[ERROR] No existe matriz de costos.")
+        print("[ERROR] No existe matriz de costos!!!")
         return
 
     mostrar_centros(centros)
     try:
         origen = int(input("Centro origen (#): ")) - 1
         if origen < 0 or origen >= len(centros):
-            print("[ERROR] Centro inválido.")
+            print("[ERROR] Centro inválido!!!")
             return
     except:
-        print("[ERROR] Entrada inválida.")
+        print("[ERROR] Entrada inválida!!!")
         return
 
     recorrido = bfs_centros_cercanos(centros, matriz, origen)
@@ -465,7 +464,7 @@ def dfs_explorar(centros, matriz, origen):
 
 def explorar_rutas_dfs(centros, matriz):
     if matriz is None:
-        print("[ERROR] No existe matriz de costos.")
+        print("[ERROR] No existe matriz de costos!!!")
         return
 
     mostrar_centros(centros)
@@ -473,10 +472,10 @@ def explorar_rutas_dfs(centros, matriz):
     try:
         origen = int(input("Centro origen (#): ")) - 1
         if origen < 0 or origen >= len(centros):
-            print("[ERROR] Centro inválido.")
+            print("[ERROR] Centro inválido!!!")
             return
     except:
-        print("[ERROR] Entrada inválida.")
+        print("[ERROR] Entrada inválida!!!")
         return
 
     recorrido = dfs_explorar(centros, matriz, origen)
@@ -499,11 +498,11 @@ def guardar_ruta_cliente(nombre_archivo, centros, ruta, costo):
         archivo.close()
         print("Ruta guardada correctamente.")
     except:
-        print("[ERROR] No se pudo guardar la ruta.")
+        print("[ERROR] No se pudo guardar la ruta!!!")
 
 def consultar_ruta_cliente(centros, matriz, correo_cliente):
     if matriz is None:
-        print("[ERROR] No existe matriz de costos.")
+        print("[ERROR] No existe matriz de costos!!!")
         return
 
     mostrar_centros(centros)
@@ -512,16 +511,16 @@ def consultar_ruta_cliente(centros, matriz, correo_cliente):
         origen = int(input("Centro origen (#): ")) - 1
         destino = int(input("Centro destino (#): ")) - 1
         if origen < 0 or origen >= len(centros) or destino < 0 or destino >= len(centros):
-            print("[ERROR] Índices fuera de rango.")
+            print("[ERROR] Índices fuera de rango!!!")
             return
     except:
-        print("[ERROR] Entrada inválida.")
+        print("[ERROR] Entrada inválida!!!")
         return
 
     distancia, previo = dijkstra(centros, matriz, origen)
 
     if distancia[destino] == float("inf"):
-        print("[ERROR] No hay ruta disponible.")
+        print("[ERROR] No hay ruta disponible!!!")
         return
 
     ruta = obtener_ruta(previo, destino)
@@ -618,7 +617,7 @@ def main():
                     elif op == "11":
                         exit_admin = True
                     else:
-                        print("[ERROR] Opción inválida")
+                        print("[ERROR] Opción inválida!!!")
 
             elif rol == "cliente":
                 exit_cliente = False
@@ -638,14 +637,14 @@ def main():
                     elif op == "6":
                         exit_cliente = True
                     else:
-                        print("[ERROR] Opción inválida")
+                        print("[ERROR] Opción inválida!!!")
 
         elif opcion == "4":
             print("GRACIAS POR USAR EL SISTEMA\nSALIENDO...")
             salir = True
 
         else:
-            print("[ERROR] Opción no válida!!!")
+            print("[ERROR] Opción inválida!!!")
 
 
 main()
